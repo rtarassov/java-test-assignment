@@ -23,6 +23,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		http.csrf().disable()
 				.authorizeRequests()
 				.antMatchers("/order/list").hasRole("USER")
+				.antMatchers("/reports/**").hasRole("ADMIN")
 				.anyRequest().authenticated()
 				.and()
 				.httpBasic();
@@ -34,8 +35,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				.dataSource(dataSource)
 
 				.usersByUsernameQuery("SELECT username, password, enabled FROM user WHERE username = ?")
-				.authoritiesByUsernameQuery("SELECT username, 'ROLE_USER' as role from user where username = ?")
-
+				.authoritiesByUsernameQuery("SELECT username, CASE WHEN is_admin = 1 THEN 'ROLE_ADMIN' ELSE 'ROLE_USER' END FROM user WHERE username = ?")
 				.passwordEncoder(passwordEncoder());
 	}
 
