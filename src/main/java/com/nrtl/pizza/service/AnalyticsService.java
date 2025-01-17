@@ -35,7 +35,7 @@ public class AnalyticsService {
 				.reduce(BigDecimal.ZERO, BigDecimal::add);
 
 		if (!pizzaEntities.isEmpty()) {
-			averageOrderPrice = totalPrice.divide(BigDecimal.valueOf(pizzaEntities.size()), 2);
+			averageOrderPrice = totalPrice.divide(BigDecimal.valueOf(orderEntities.size()), 2);
 		}
 
 		return UserAnalyticsDto.builder()
