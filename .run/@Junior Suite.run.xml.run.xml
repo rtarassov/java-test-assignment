@@ -1,0 +1,14 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="@Junior Suite" type="JUnit" factoryName="JUnit">
+    <module name="java-test-assignment" />
+    <option name="PACKAGE_NAME" value="com.nrtl.pizza.test.integration" />
+    <option name="MAIN_CLASS_NAME" value="com.nrtl.pizza.test.integration.GetClientOrdersIT" />
+    <option name="METHOD_NAME" value="getClientOrders" />
+    <option name="TEST_OBJECT" value="tags" />
+    <option name="WORKING_DIRECTORY" value="$MODULE_DIR$" />
+    <tag value="Junior" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>
