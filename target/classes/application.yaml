@@ -1,7 +1,0 @@
-spring:
-  flyway:
-    enabled: true
-  jpa:
-    database-platform: org.hibernate.dialect.MySQL8Dialect
-database:
-  fresh-schema-on-start: true

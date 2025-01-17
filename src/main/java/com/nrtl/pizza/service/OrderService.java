@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -59,6 +60,8 @@ public class OrderService {
 				.id(orderEntity.getId())
 				.address(orderEntity.getAddress())
 				.pizzas(orderEntity.getPizzas().stream().map(PizzaEntity::getName).toList())
+				.price(orderEntity.getPizzas().stream().map(PizzaEntity::getPrice)
+						.toList().stream().reduce(BigDecimal.ZERO, BigDecimal::add))
 				.build();
 	}
 }
