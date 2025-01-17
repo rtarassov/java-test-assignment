@@ -1,12 +1,14 @@
 package com.nrtl.pizza.service;
 
 import com.nrtl.pizza.domain.OrderEntity;
+import com.nrtl.pizza.domain.PizzaEntity;
 import com.nrtl.pizza.dto.OrderDto;
 import com.nrtl.pizza.exception.EntityNotFoundException;
 import com.nrtl.pizza.repository.OrderRepository;
 import com.nrtl.pizza.repository.UserRepository;
 import com.nrtl.pizza.security.SpringSecuritySecurityContextProvider;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,6 +19,8 @@ import java.util.stream.Collectors;
 public class OrderService {
 	private final OrderRepository orderRepository;
 	private final UserRepository userRepository;
+
+	@Autowired
 	private final SpringSecuritySecurityContextProvider securityContextProvider;
 
 	public List<OrderDto> findOrderByAddress(String address) {
@@ -54,7 +58,7 @@ public class OrderService {
 		return OrderDto.builder()
 				.id(orderEntity.getId())
 				.address(orderEntity.getAddress())
-				.pizzas(orderEntity.getPizzas().stream().map(pizzaEntity -> pizzaEntity.getName()).toList())
+				.pizzas(orderEntity.getPizzas().stream().map(PizzaEntity::getName).toList())
 				.build();
 	}
 }
