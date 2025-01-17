@@ -15,4 +15,7 @@ public interface OrderRepository extends CrudRepository<OrderEntity, Integer> {
 	@Query("SELECT o from OrderEntity o WHERE LOWER(o.address) LIKE %:address% ORDER BY o.id DESC")
 	List<OrderEntity> findOrderByAddress(@Param("address") String address);
 
+	@Query("SELECT o from OrderEntity o WHERE o.client.id=:id ORDER BY o.id DESC")
+	List<OrderEntity> findOrdersByClientId(@Param("id") Integer id);
+
 }
