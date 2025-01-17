@@ -20,7 +20,8 @@ public class PizzaOrderSummaryDto {
 	@NoArgsConstructor
 	public static class PizzaOrders {
 		private String name;
-		private Long quantity;
+		private Double totalRevenue;
+		private Double orderedRatio;
 	}
 }
 

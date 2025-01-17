@@ -18,4 +18,7 @@ public interface OrderRepository extends CrudRepository<OrderEntity, Integer> {
 	@Query("SELECT o from OrderEntity o WHERE o.client.id=:id ORDER BY o.id DESC")
 	List<OrderEntity> findOrdersByClientId(@Param("id") Integer id);
 
+	@Query("SELECT o from OrderEntity o ORDER BY o.id DESC")
+	List<OrderEntity> findAllOrders();
+
 }
