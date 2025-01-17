@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public interface OrderRepository extends CrudRepository<OrderEntity, Integer> {
@@ -20,5 +21,9 @@ public interface OrderRepository extends CrudRepository<OrderEntity, Integer> {
 
 	@Query("SELECT o from OrderEntity o ORDER BY o.id DESC")
 	List<OrderEntity> findAllOrders();
+
+	@Query("SELECT o FROM OrderEntity o WHERE o.dateCreated BETWEEN :startOfCurrentWeek AND :now")
+	List<OrderEntity> findOrdersFromThisWeek(@Param("startOfCurrentWeek") LocalDateTime startOfCurrentWeek,
+											 @Param("now") LocalDateTime now);
 
 }

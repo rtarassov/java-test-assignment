@@ -22,6 +22,7 @@ public class PizzaOrderSummaryDto {
 		private String name;
 		private Double totalRevenue;
 		private Double orderedRatio;
+		private Long quantity;
 	}
 }
 
