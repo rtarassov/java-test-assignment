@@ -71,7 +71,7 @@ class OrderServiceTest {
         when(securityContextProvider.getUser()).thenReturn(
                 new User("admin", "password", Collections.emptyList())
         );
-        when(orderRepository.findOrdersByClientId(anyString())).thenReturn(orderEntities);
+        when(orderRepository.findOrdersByClientUsername(anyString())).thenReturn(orderEntities);
         List<OrderDto> result = orderService.getAllClientOrders();
 
         assertThat(result.get(0).getId()).isEqualTo(1);

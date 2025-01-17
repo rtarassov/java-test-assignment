@@ -49,7 +49,7 @@ public class OrderService {
 	}
 
 	public List<OrderDto> getAllClientOrders() {
-		return orderRepository.findOrdersByClientId(securityContextProvider.getUser().getUsername())
+		return orderRepository.findOrdersByClientUsername(securityContextProvider.getUser().getUsername())
 				.stream()
 				.map(this::mapEntity)
 				.collect(Collectors.toList());
