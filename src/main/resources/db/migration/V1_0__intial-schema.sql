@@ -26,3 +26,6 @@ is_admin boolean,
 enabled boolean,
 date_created timestamp
 );
+
+CREATE INDEX idx_user_username ON user (username);
+CREATE INDEX idx_order_client_id ON order_ (client_id);

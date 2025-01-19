@@ -9,6 +9,8 @@ import com.nrtl.pizza.repository.UserRepository;
 import com.nrtl.pizza.security.SpringSecuritySecurityContextProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -48,9 +50,11 @@ public class OrderService {
 				.orElseThrow(() -> new EntityNotFoundException(id));
 	}
 
-	public List<OrderDto> getAllClientOrders() {
-		return orderRepository.findOrdersByClientUsername(securityContextProvider.getUser().getUsername())
-				.stream()
+	public List<OrderDto> getAllClientOrders(Pageable pageable) {
+		Page<OrderEntity> ordersPage = orderRepository.findOrdersByClientUsername(
+				securityContextProvider.getUser().getUsername(), pageable);
+
+		return ordersPage.stream()
 				.map(this::mapEntity)
 				.collect(Collectors.toList());
 	}

@@ -3,6 +3,8 @@ package com.nrtl.pizza.controller;
 import com.nrtl.pizza.dto.OrderDto;
 import com.nrtl.pizza.service.OrderService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,8 +22,10 @@ public class OrderController {
     }
 
     @GetMapping("/list")
-    public List<OrderDto> getOrder() {
-        return orderService.getAllClientOrders();
+    public List<OrderDto> getOrders(@RequestParam(defaultValue = "0") int page,
+                                    @RequestParam(defaultValue = "10") int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return orderService.getAllClientOrders(pageable);
     }
 
     @PostMapping("/find-by-address")

@@ -18,6 +18,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.User;
 
 import java.math.BigDecimal;
@@ -30,6 +34,7 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.when;
 
 /**
@@ -71,8 +76,14 @@ class OrderServiceTest {
         when(securityContextProvider.getUser()).thenReturn(
                 new User("admin", "password", Collections.emptyList())
         );
-        when(orderRepository.findOrdersByClientUsername(anyString())).thenReturn(orderEntities);
-        List<OrderDto> result = orderService.getAllClientOrders();
+        Pageable pageable = PageRequest.of(0, 10);
+
+        Page<OrderEntity> pagedOrders = new PageImpl<>(orderEntities);
+
+        lenient().when(orderRepository.findOrdersByClientUsername(eq("admin"), eq(pageable)))
+                .thenReturn(pagedOrders);
+
+        List<OrderDto> result = orderService.getAllClientOrders(pageable);
 
         assertThat(result.get(0).getId()).isEqualTo(1);
         assertThat(result.get(0).getAddress()).isEqualTo(orderEntity1.getAddress());
@@ -105,9 +116,7 @@ class OrderServiceTest {
     @Test
     void shouldReturnAllClientOrders_getById_EntityNotFoundException() {
         when(orderRepository.findById(50)).thenReturn(Optional.empty());
-        Exception exception = assertThrows(EntityNotFoundException.class, () -> {
-           orderService.getById(50);
-        });
+        Exception exception = assertThrows(EntityNotFoundException.class, () -> orderService.getById(50));
         assertThat(exception.getMessage()).isEqualTo("Entity with identifier [" + 50 + "] was not found.");
 
     }

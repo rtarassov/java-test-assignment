@@ -1,6 +1,9 @@
 package com.nrtl.pizza.repository;
 
 import com.nrtl.pizza.domain.OrderEntity;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
@@ -10,8 +13,9 @@ import java.util.List;
 
 public interface OrderRepository extends CrudRepository<OrderEntity, Integer> {
 
+	@EntityGraph(attributePaths = {"pizzas"})
 	@Query("SELECT o from OrderEntity o WHERE o.client.username=:username ORDER BY o.id DESC")
-	List<OrderEntity> findOrdersByClientUsername(@Param("username") String username);
+	Page<OrderEntity> findOrdersByClientUsername(@Param("username") String username, Pageable pageable);
 
 	@Query("SELECT o from OrderEntity o WHERE LOWER(o.address) LIKE %:address% ORDER BY o.id DESC")
 	List<OrderEntity> findOrderByAddress(@Param("address") String address);
