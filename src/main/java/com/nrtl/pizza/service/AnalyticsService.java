@@ -27,31 +27,32 @@ public class AnalyticsService {
 	public List<PizzaOrderSummaryDto.PizzaOrders> calculatePizzaAnalytics() {
 		List<OrderEntity> allOrders = orderRepository.findAllOrders();
 
-		List<PizzaEntity> pizzaEntities = allOrders.stream()
-				.flatMap(order -> order.getPizzas().stream()).toList();
+		List<PizzaEntity> allPizzas = allOrders.stream()
+				.flatMap(order -> order.getPizzas().stream())
+				.toList();
 
-		long totalUniquePizzasOrdered = pizzaEntities.stream()
-				.map(PizzaEntity::getId)
-				.distinct()
-				.count();
+		int totalOrders = allOrders.size();
 
-		Map<Integer, List<PizzaEntity>> pizzasGroupedById = pizzaEntities.stream()
-				.collect(Collectors.groupingBy(PizzaEntity::getId));
+		Map<String, Long> pizzaOrderCountMap = allOrders.stream()
+				.flatMap(order -> order.getPizzas().stream())
+				.collect(Collectors.groupingBy(PizzaEntity::getName, Collectors.counting()));
 
-		return pizzasGroupedById.values().stream()
-				.map(pizzas -> {
+		Map<String, Double> pizzaRevenueMap = allPizzas.stream()
+				.collect(Collectors.groupingBy(PizzaEntity::getName,
+						Collectors.summingDouble(pizza -> pizza.getPrice().doubleValue())));
 
-					var totalRevenue = pizzas.stream()
-							.mapToDouble(pizza -> pizza.getPrice().doubleValue()).sum();
+		return pizzaOrderCountMap.entrySet().stream()
+				.map(entry -> {
 
-					double orderedRatio = (double) pizzas.size() / totalUniquePizzasOrdered;
-					double orderedRatioFraction = orderedRatio / 10;
-					double orderedRatioTotal = orderedRatio + orderedRatioFraction;
+					String pizzaName = entry.getKey();
+					long pizzaOrderCount = entry.getValue();
+					double totalRevenue = pizzaRevenueMap.getOrDefault(pizzaName, 0.0);
+					double orderedRatio = (double) pizzaOrderCount / totalOrders;
 
 					return PizzaOrderSummaryDto.PizzaOrders.builder()
-							.name(pizzas.get(0).getName())
+							.name(pizzaName)
 							.totalRevenue(totalRevenue)
-							.orderedRatio(orderedRatioTotal)
+							.orderedRatio(Math.round(orderedRatio * 100.0) / 100.0)
 							.build();
 				})
 				.toList();
